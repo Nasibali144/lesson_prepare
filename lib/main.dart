@@ -1,59 +1,21 @@
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:lesson_prepare/services/fcm_service.dart';
 import 'package:lesson_prepare/services/service_two.dart';
 
+import 'firebase_options.dart';
 
-/*
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await NotificationService().initNotification();
-  runApp(const App());
-}
-
-class App extends StatelessWidget {
-  const App({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MyHomePage(title: "Salom"),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-          child: ElevatedButton(
-        child: const Text('Show notifications'),
-        onPressed: () {
-          NotificationService()
-              .showNotification(title: 'Sample title', body: 'It works!');
-        },
-      )),
-    );
-  }
-}
-*/
 
 final service = ServiceForB28();
+final fcm = FCMService();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  fcm.init();
   await service.init();
   runApp(const MyApp());
 }
@@ -82,6 +44,8 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     service.getPermission();
+    fcm.requestMessagingPermission();
+    fcm.generateToken();
   }
 
   @override
