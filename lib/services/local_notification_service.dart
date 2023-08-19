@@ -32,6 +32,8 @@ class NotificationService {
 
   Future showNotification(
       {int id = 0, String? title, String? body, String? payLoad}) async {
+    notificationsPlugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
     return notificationsPlugin.show(
         id, title, body, await notificationDetails());
   }
