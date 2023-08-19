@@ -18,6 +18,7 @@ class FCMService {
     /// Background
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
+
     /// Foreground
     FirebaseMessaging.onMessage.listen((remoteMessage) {
       debugPrint('Got a message in the foreground');
