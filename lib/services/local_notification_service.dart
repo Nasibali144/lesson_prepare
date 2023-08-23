@@ -26,7 +26,7 @@ class NotificationService {
   notificationDetails() {
     return const NotificationDetails(
         android: AndroidNotificationDetails('channelId', 'channelName',
-            importance: Importance.max),
+            importance: Importance.max,),
         iOS: DarwinNotificationDetails());
   }
 

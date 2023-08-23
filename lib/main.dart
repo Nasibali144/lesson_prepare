@@ -2,12 +2,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:lesson_prepare/services/fcm_service.dart';
-import 'package:lesson_prepare/services/service_two.dart';
-
 import 'firebase_options.dart';
 
 
-final service = ServiceForB28();
 final fcm = FCMService();
 
 void main() async {
@@ -15,8 +12,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  fcm.init();
-  await service.init();
+  await fcm.init();
+
   runApp(const MyApp());
 }
 
@@ -43,7 +40,6 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    service.getPermission();
     fcm.requestMessagingPermission();
     fcm.generateToken();
   }
@@ -54,7 +50,7 @@ class _HomeState extends State<Home> {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            service.requestNotification();
+            fcm.sendMessageForOne();
           },
           child: const Text("Press Me"),
         ),

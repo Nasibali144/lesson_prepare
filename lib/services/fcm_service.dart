@@ -1,41 +1,50 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:lesson_prepare/services/service_two.dart';
 
 class FCMService {
-
   /// TODO: Main Object for manage
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+  final local = ServiceForB28();
 
   /// TODO: FOR BACKGROUND
   @pragma('vm:entry-point')
-  static Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-    print("Handling a background message: ${message.messageId}");
+  static Future<void> _firebaseMessagingBackgroundHandler(
+      RemoteMessage message) async {
+    if (kDebugMode) {
+      print("Handling a background message: ${message.messageId}");
+    }
   }
 
-
   /// TODO: Initialize settings
-  void init() async {
+  Future<void> init() async {
+    /// Foreground - Local Notification Integration For Android
+    await local.init();
+
+    /// Foreground - Settings IOS
+    await firebaseMessaging.setForegroundNotificationPresentationOptions(
+      alert: true, // Required to display a heads up notification
+      badge: true,
+      sound: true,
+    );
+
     /// Background
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-
     /// Foreground
-    FirebaseMessaging.onMessage.listen((remoteMessage) {
-      debugPrint('Got a message in the foreground');
-      debugPrint('message data: ${remoteMessage.data}');
+    FirebaseMessaging.onMessage.listen((message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
 
-      if (remoteMessage.notification != null) {
-        debugPrint('message is a notification');
-        // On Android, foreground notifications are not shown, only when the app
-        // is backgrounded.
-
-        /// connecting local notification show
+      print("message: ${message.data}");
+      if (notification != null && android != null) {
+        local.requestNotification(message.data['title'], message.data['body']);
       }
     });
   }
 
-
   Future<void> requestMessagingPermission() async {
+    await local.getPermission();
     NotificationSettings settings = await firebaseMessaging.requestPermission(
       alert: true,
       announcement: false,
@@ -47,7 +56,9 @@ class FCMService {
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print("Status: ${settings.authorizationStatus}");
+      if (kDebugMode) {
+        print("Status: ${settings.authorizationStatus}");
+      }
     }
 
     debugPrint('Users permission status: ${settings.authorizationStatus}');
@@ -55,7 +66,15 @@ class FCMService {
 
   Future<String?> generateToken() async {
     final token = await firebaseMessaging.getToken();
-    print("Token: $token");
+    if (kDebugMode) {
+      print("Token: $token");
+    }
     return token;
+  }
+
+  void sendMessageForOne() async {
+    firebaseMessaging.sendMessage(
+        to: await generateToken(),
+        data: {"title": "Hello", "body": "Hello FCM"});
   }
 }

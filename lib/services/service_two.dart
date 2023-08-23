@@ -50,7 +50,7 @@ class ServiceForB28 {
   }
 
   /// TODO: request
-  void requestNotification() async{
+  void requestNotification(String title, String body) async{
     const AndroidNotificationDetails androidNotificationDetails =
     AndroidNotificationDetails('your channel id', 'your channel name',
         channelDescription: 'your channel description',
@@ -59,6 +59,6 @@ class ServiceForB28 {
         ticker: 'ticker');
     const NotificationDetails notificationDetails =
     NotificationDetails(android: androidNotificationDetails, iOS: DarwinNotificationDetails());
-    await flutterLocalNotificationsPlugin.show(0, 'plain title', 'plain body', notificationDetails, payload: 'item x');
+    await flutterLocalNotificationsPlugin.show(0, title, body, notificationDetails, payload: 'item x');
   }
 }
