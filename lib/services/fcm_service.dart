@@ -45,15 +45,7 @@ class FCMService {
 
   Future<void> requestMessagingPermission() async {
     await local.getPermission();
-    NotificationSettings settings = await firebaseMessaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
+    NotificationSettings settings = await firebaseMessaging.requestPermission();
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       if (kDebugMode) {

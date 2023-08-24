@@ -15,13 +15,10 @@ class ServiceForB28 {
   /// TODO setting:
   Future<void> init() async {
     /// Setting: Android
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings("@mipmap/ic_launcher");
+    const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings("@mipmap/ic_launcher");
 
     /// Setting: IOS and Macos
-    final DarwinInitializationSettings initializationSettingsDarwin =
-        DarwinInitializationSettings(
-            onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+    final DarwinInitializationSettings initializationSettingsDarwin = DarwinInitializationSettings(onDidReceiveLocalNotification: onDidReceiveLocalNotification);
 
     /// Setting: Linux
     const LinuxInitializationSettings initializationSettingsLinux =
